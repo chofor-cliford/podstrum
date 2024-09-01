@@ -4,6 +4,7 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Loader } from "lucide-react";
 import { useState } from "react";
+import { api } from "@/convex/_generated/api";
 
 const useGeneratePodcast = ({
     voiceType,
@@ -46,6 +47,7 @@ const useGeneratePodcast = ({
   };
 };
 
+
 const GeneratePodcast = ({
   setAudio,
   setAudioStorageId,
@@ -55,15 +57,18 @@ const GeneratePodcast = ({
   voiceType,
   voicePrompt,
 }: GeneratePodcastProps) => {
-  const { isGenerating, generatePodcast } = useGeneratePodcast({
-    voiceType,
-    setAudio,
-    audio,
-    setAudioStorageId,
-    setVoicePrompt,
-    setAudioDuration,
-    voicePrompt: "",
-  });
+
+const getPodcastAudio = useAction(api.openai.generateAudioAction);
+
+  // const { isGenerating, generatePodcast } = useGeneratePodcast({
+  //   voiceType,
+  //   setAudio,
+  //   audio,
+  //   setAudioStorageId,
+  //   setVoicePrompt,
+  //   setAudioDuration,
+  //   voicePrompt: "",
+  // });
 
   return (
     <div>
