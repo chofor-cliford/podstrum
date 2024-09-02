@@ -43,18 +43,20 @@ const formSchema = z.object({
 const CreatePodcast = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [imageStorageId, setImageStorageId] = useState<Id<"_storage"> | null>(null);
+  const [imageStorageId, setImageStorageId] = useState<Id<"_storage"> | null>(
+    null
+  );
   const [imagePrompt, setImagePrompt] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
-
   const [audio, setAudio] = useState("");
-  const [audioStorageId, setAudioStorageId] = useState<Id<"_storage"> | null>(null);
+  const [audioStorageId, setAudioStorageId] = useState<Id<"_storage"> | null>(
+    null
+  );
   const [audioDuration, setAudioDuration] = useState(0);
-  
+
   const [voicePrompt, setVoicePrompt] = useState("");
   const [voiceType, setVoiceType] = useState<string>("");
-
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -170,7 +172,13 @@ const CreatePodcast = () => {
               setAudioDuration={setAudioDuration}
               setVoicePrompt={setVoicePrompt}
             />
-            <GenerateThumbnail />
+            <GenerateThumbnail
+              setImage={setImageUrl}
+              setImageStorageId={setImageStorageId}
+              image={imageUrl}
+              imagePrompt={imagePrompt}
+              setImagePrompt={setImagePrompt}
+            />
 
             <div className="mt-10 w-full">
               <Button
