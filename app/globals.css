@@ -14,10 +14,10 @@ html {
 
 
 @layer utilities {
-    .text-red-gradient {
-      @apply text-transparent bg-clip-text;
-      background-image: linear-gradient(92deg, #ff5956 2.87%, #ee1e38 96.18%);
-    }
+  .text-red-gradient {
+    @apply text-transparent bg-clip-text;
+    background-image: linear-gradient(92deg, #ff5956 2.87%, #ee1e38 96.18%);
+  }
   .input-class {
     @apply text-16 placeholder:text-16 bg-black-1 rounded-[6px] placeholder:text-gray-1 ring-0 border-none text-gray-1;
   }

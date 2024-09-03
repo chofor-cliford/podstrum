@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Select,
@@ -30,6 +30,10 @@ import GenerateThumbnail from "@/components/GenerateThumbnail";
 import GeneratePodcast from "@/components/GeneratePodcast";
 import { Loader } from "lucide-react";
 import { Id } from "@/convex/_generated/dataModel";
+import { useToast } from "@/components/hooks/use-toast";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   podcastTitle: z.string().min(2, {
@@ -49,7 +53,7 @@ const CreatePodcast = () => {
   const [imagePrompt, setImagePrompt] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
-  const [audio, setAudio] = useState("");
+  const [audioUrl, setAudioUrl] = useState("");
   const [audioStorageId, setAudioStorageId] = useState<Id<"_storage"> | null>(
     null
   );
@@ -57,6 +61,10 @@ const CreatePodcast = () => {
 
   const [voicePrompt, setVoicePrompt] = useState("");
   const [voiceType, setVoiceType] = useState<string>("");
+  const createPodcast = useMutation(api.podcasts.createPodcast);
+  const router = useRouter();
+
+  const { toast } = useToast();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -68,10 +76,43 @@ const CreatePodcast = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    try {
+      setIsSubmitting(true);
+      // Handle submitting the form.
+      if (!audioUrl || !imageUrl || !voiceType) {
+        toast({
+          title: "Please generate audio and image",
+        });
+        setIsSubmitting(false);
+        throw new Error("Please generate audio and image");
+      }
+
+      // Create podcast
+      await createPodcast({
+        podcastTitle: data.podcastTitle,
+        podcastDescription: data.podcastDescription,
+        audioStorageId: audioStorageId!,
+        imageStorageId: imageStorageId!,
+        audioUrl,
+        imageUrl,
+        voiceType,
+        imagePrompt,
+        voicePrompt,
+        views: 0,
+        audioDuration,
+      });
+      toast({ title: "Podcast created successfully" });
+      setIsSubmitting(false);
+      router.push("/");
+    } catch (error) {
+      // Handle any errors.
+      toast({
+        title: "Error submitting form",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+    }
   }
 
   const voiceCategories = ["alloy", "shimmer", "nova", "echo", "fable", "onyx"];
@@ -166,8 +207,8 @@ const CreatePodcast = () => {
             <GeneratePodcast
               voiceType={voiceType}
               voicePrompt={voicePrompt}
-              audio={audio}
-              setAudio={setAudio}
+              audio={audioUrl}
+              setAudio={setAudioUrl}
               setAudioStorageId={setAudioStorageId}
               setAudioDuration={setAudioDuration}
               setVoicePrompt={setVoicePrompt}
