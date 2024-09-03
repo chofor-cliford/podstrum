@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "impartial-minnow-398.convex.cloud",
       },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com"
+      }
     ],
   },
 };

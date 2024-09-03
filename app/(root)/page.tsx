@@ -5,7 +5,6 @@ import { useQuery } from "convex/react";
 
 const Home = () => {
   const trendingPodcasts = useQuery(api.podcasts.getTrendingPodcasts);
-  console.log(trendingPodcasts);
 
   return (
     <div className="mt-9 flex flex-col gap-9">
