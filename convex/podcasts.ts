@@ -24,12 +24,15 @@ export const createPodcast = mutation({
       throw new ConvexError("User not authenticated");
     }
 
+    console.log(`Authenticated user's email: ${identity.email}`);
+
     const user = await ctx.db
       .query("users")
       .filter((q) => q.eq(q.field("email"), identity.email))
       .collect();
 
     if (user.length === 0) {
+      console.error(`User not found for email: ${identity.email}`);
       throw new ConvexError("User not found");
     }
 
@@ -52,6 +55,7 @@ export const createPodcast = mutation({
     });
   },
 });
+
 
 // this mutation is required to generate the url after uploading the file to the storage.
 export const getUrl = mutation({

@@ -75,16 +75,15 @@ const CreatePodcast = () => {
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(data: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
     try {
-      setIsSubmitting(true);
-      // Handle submitting the form.
+      // Validate required fields before proceeding.
       if (!audioUrl || !imageUrl || !voiceType) {
         toast({
           title: "Please generate audio and image",
+          variant: "destructive",
         });
-        setIsSubmitting(false);
         throw new Error("Please generate audio and image");
       }
 
@@ -102,15 +101,16 @@ const CreatePodcast = () => {
         views: 0,
         audioDuration,
       });
+
       toast({ title: "Podcast created successfully" });
-      setIsSubmitting(false);
       router.push("/");
     } catch (error) {
-      // Handle any errors.
+      console.error("Error submitting form", error);
       toast({
         title: "Error submitting form",
         variant: "destructive",
       });
+    } finally {
       setIsSubmitting(false);
     }
   }
