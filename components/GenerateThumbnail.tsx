@@ -32,7 +32,6 @@ const GenerateThumbnail = ({
 
   const handleImage = async (imageBlob: Blob, fileName: string) => {
     // Handle Generating Thumbnail
-    setIsImageLoading(true);
     setImage("");
 
     try {
@@ -58,6 +57,8 @@ const GenerateThumbnail = ({
 
   const generateImage = async () => {
     // Call API to generate thumbnail
+    setIsImageLoading(true);
+    
     try {
       const response = await handleGenerateThumbnail({ prompt: imagePrompt });
       const imageBlob = new Blob([response], { type: "image/png" });
@@ -68,6 +69,8 @@ const GenerateThumbnail = ({
         title: "Error generating thumbnail",
         variant: "destructive",
       });
+    } finally {
+      setIsImageLoading(false);
     }
   };
 
@@ -128,7 +131,7 @@ const GenerateThumbnail = ({
           </div>
           <div className="mt-5 w-full max-w-[200px]">
             <Button
-              type="submit"
+              type="button"
               className="text-16 bg-red-gradient py-4 font-bold text-white-1 transition-all duration-500"
               onClick={generateImage}
             >

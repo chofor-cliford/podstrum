@@ -12,50 +12,49 @@ import { useUploadFiles } from "@xixixao/uploadstuff/react";
 import { useToast } from "@/components/hooks/use-toast";
 
 const useGeneratePodcast = ({
-  voiceType,
   setAudio,
-  audio,
-  setAudioStorageId,
-  setVoicePrompt,
-  setAudioDuration,
+  voiceType,
   voicePrompt,
+  setAudioStorageId,
 }: GeneratePodcastProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
-  const getPodcastAudio = useAction(api.openai.generateAudioAction);
-  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
-  const getAudioUrl = useMutation(api.podcasts.getUrl);
-  const { startUpload } = useUploadFiles(generateUploadUrl);
   const { toast } = useToast();
+
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+  const { startUpload } = useUploadFiles(generateUploadUrl);
+
+  const getPodcastAudio = useAction(api.openai.generateAudioAction);
+
+  const getAudioUrl = useMutation(api.podcasts.getUrl);
 
   const generatePodcast = async () => {
     setIsGenerating(true);
-    // Call API to generate podcast
     setAudio("");
 
-    if (!voicePrompt) {
-      toast({
-        title: "Please enter a prompt to generate podcast",
-      });
-      return setIsGenerating(false);
-    }
-
     try {
+      if (!voicePrompt) {
+        toast({
+          title: "Please provide a voiceType to generate a podcast",
+        });
+        throw new Error("Please provide a voiceType to generate a podcast");
+      }
+
       const response = await getPodcastAudio({
         voice: voiceType,
         input: voicePrompt,
       });
 
-      const audioBlob = new Blob([response], { type: "audio/mp3" });
+      const blob = new Blob([response], { type: "audio/mpeg" });
       const fileName = `podcast-${uuidv4()}.mp3`;
-      const file = new File([audioBlob], fileName, { type: "audio/mp3" });
+      const file = new File([blob], fileName, { type: "audio/mpeg" });
 
       const uploaded = await startUpload([file]);
       const storageId = (uploaded[0].response as any).storageId;
 
       setAudioStorageId(storageId);
+
       const audioUrl = await getAudioUrl({ storageId });
-      setAudio(audioUrl ?? "");
-      setIsGenerating(false);
+      setAudio(audioUrl!);
       toast({
         title: "Podcast generated successfully",
       });
@@ -65,14 +64,12 @@ const useGeneratePodcast = ({
         title: "Error creating a podcast",
         variant: "destructive",
       });
+    } finally {
       setIsGenerating(false);
     }
   };
 
-  return {
-    isGenerating,
-    generatePodcast,
-  };
+  return { isGenerating, generatePodcast };
 };
 
 const GeneratePodcast = ({
@@ -110,7 +107,7 @@ const GeneratePodcast = ({
       </div>
       <div className="mt-5 w-full max-w-[200px]">
         <Button
-          type="submit"
+          type="button"
           className="text-16 bg-red-gradient py-4 font-bold text-white-1 transition-all duration-500"
           onClick={generatePodcast}
         >
