@@ -120,7 +120,6 @@ export const getTrendingPodcasts = query({
   },
 });
 
-
 // this query will get the podcast by the authorId.
 export const getPodcastByAuthorId = query({
   args: {
