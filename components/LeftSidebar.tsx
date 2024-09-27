@@ -7,14 +7,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "./ui/button";
+import { useUser } from "@clerk/clerk-react";
+import { useAudio } from "@/providers/AudioProvider";
 
 const LeftSidebar = () => {
   const pathname = usePathname();
   const { signOut } = useClerk();
+  const { user } = useUser();
   const router = useRouter();
+  const { audio } = useAudio();
 
   return (
-    <section className="left_sidebar">
+    <section
+      className={cn("left_sidebar h-[calc(100vh - 5px)]", {
+        "h-[calc(100vh-140px)]": audio?.audioUrl,
+      })}
+    >
       <nav className="flex flex-col gap-6">
         <Link
           href="/"
@@ -32,7 +40,9 @@ const LeftSidebar = () => {
 
           return (
             <Link
-              href={item.route}
+              href={
+                item.route == "/profile" ? `/profile/${user?.id}` : item.route
+              }
               key={item.label}
               className={cn(
                 "flex gap-3 items-center py-4 max-lg:px-4 justify-center lg:justify-start",

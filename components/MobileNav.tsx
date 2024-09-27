@@ -11,9 +11,11 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/clerk-react";
 
 const MobileNav = () => {
   const pathname = usePathname();
+  const { user } = useUser();
 
   return (
     <section>
@@ -42,7 +44,11 @@ const MobileNav = () => {
                   return (
                     <SheetClose asChild key={item.route}>
                       <Link
-                        href={item.route}
+                        href={
+                          item.route == "/profile"
+                            ? `/profile/${user?.id}`
+                            : item.route
+                        }
                         key={item.label}
                         className={cn(
                           "flex gap-3 items-center py-4 max-lg:px-4 justify-start",
