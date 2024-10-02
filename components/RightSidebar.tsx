@@ -80,7 +80,7 @@ const RightSidebar = () => {
                 </h2>
               </figure>
               <div className="flex items-center">
-                <p className="text-12 font-normal">
+                <p className="text-12 font-normal text-white-1">
                   {formatPodcastCount(orator.totalPodcasts)}
                 </p>
               </div>

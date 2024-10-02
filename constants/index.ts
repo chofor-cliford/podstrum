@@ -1,3 +1,5 @@
+import { Heart } from "lucide-react";
+
 export const sidebarLinks = [
   {
     imgURL: "/icons/home.svg",
@@ -6,13 +8,18 @@ export const sidebarLinks = [
   },
   {
     imgURL: "/icons/discover.svg",
-    route: "/discover",
-    label: "Discover",
+    route: "/explore",
+    label: "Explore",
   },
   {
-    imgURL: "/icons/microphone.svg",
+    imgURL: "/icons/create.svg",
     route: "/create-podcast",
     label: "Create Podcast",
+  },
+  {
+    imgURL: "/icons/heart.svg",
+    route: "/favourites",
+    label: "Favourites",
   },
   {
     imgURL: "/icons/user.svg",
