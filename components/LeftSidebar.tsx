@@ -30,7 +30,7 @@ const LeftSidebar = () => {
         >
           <Image src="/icons/logo.svg" alt="logo" width={29} height={29} />
           <h1 className="text-24 font-extrabold text-white max-lg:hidden">
-            Oratoria
+            Podstrum
           </h1>
         </Link>
 

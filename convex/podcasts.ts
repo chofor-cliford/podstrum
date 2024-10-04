@@ -1,5 +1,4 @@
 import { ConvexError, v } from "convex/values";
-
 import { mutation, query } from "./_generated/server";
 
 // create podcast mutation
@@ -55,7 +54,6 @@ export const createPodcast = mutation({
     });
   },
 });
-
 
 // this mutation is required to generate the url after uploading the file to the storage.
 export const getUrl = mutation({
@@ -116,7 +114,18 @@ export const getTrendingPodcasts = query({
     // Sort by _creationTime in descending order (latest first)
     return podcasts
       .sort((a, b) => b._creationTime - a._creationTime)
-      .slice(0, 8);
+      .slice(0, 4);
+  },
+});
+
+export const getPopularPodcasts = query({
+  handler: async (ctx) => {
+    const podcasts = await ctx.db.query("podcasts").collect();
+
+    // Sort by _creationTime in descending order (latest first)
+    return podcasts
+      .sort((a, b) => b._creationTime - a._creationTime)
+      .slice(4, 8);
   },
 });
 

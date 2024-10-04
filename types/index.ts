@@ -74,6 +74,7 @@ export interface LatestPodcastCardProps {
   audioUrl: string;
   author: string;
   views: number;
+  creationTime: number;
   podcastId: Id<"podcasts">;
 }
 

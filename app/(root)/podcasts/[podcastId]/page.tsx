@@ -26,7 +26,7 @@ const PodcastDetails = ({
 
   const isOwner = user?.id === podcast?.authorId;
 
-  if (!similarPodcasts || !podcast) return <LoaderSpinner />;
+  if (!similarPodcasts || !podcast) return null;
 
   return (
     <section className="flex w-full flex-col">

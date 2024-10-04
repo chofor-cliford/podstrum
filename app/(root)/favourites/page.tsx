@@ -1,8 +1,7 @@
-import React from 'react'
 
 const Favourites = () => {
   return (
-    <div>Favourites</div>
+    <h2 className="text-white font-bold">Favourites</h2>
   )
 }
 

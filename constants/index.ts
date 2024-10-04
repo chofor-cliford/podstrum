@@ -12,14 +12,14 @@ export const sidebarLinks = [
     label: "Explore",
   },
   {
-    imgURL: "/icons/create.svg",
-    route: "/create-podcast",
-    label: "Create Podcast",
-  },
-  {
     imgURL: "/icons/heart.svg",
     route: "/favourites",
     label: "Favourites",
+  },
+  {
+    imgURL: "/icons/create.svg",
+    route: "/create-podcast",
+    label: "Create Podcast",
   },
   {
     imgURL: "/icons/user.svg",

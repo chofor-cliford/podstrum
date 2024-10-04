@@ -7,7 +7,7 @@ import AudioProvider from "@/providers/AudioProvider";
 const manrope = Manrope({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Oratoria",
+  title: "Podstrum",
   description: "Empowers users to amplify their stories.",
   icons: {
     icon: "/icons/logo.svg",
