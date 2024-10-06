@@ -15,7 +15,9 @@ const PodcastPlayer = () => {
   const [duration, setDuration] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const { audio } = useAudio();
+  const [isShuffled, setIsShuffled] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
+  const { audio, shuffleAudioList, setAudio, audioList } = useAudio();
 
   const togglePlayPause = () => {
     if (audioRef.current?.paused) {
@@ -33,23 +35,51 @@ const PodcastPlayer = () => {
       setIsMuted((prev) => !prev);
     }
   };
-// Move forward by five seconds
+
+  const toggleLoop = () => {
+    if (audioRef.current) {
+      audioRef.current.loop = !audioRef.current.loop;
+      setIsLooping((prev) => !prev);
+    }
+  };
+
   const forward = () => {
     if (
       audioRef.current &&
-      audioRef.current.currentTime &&
-      audioRef.current.duration &&
       audioRef.current.currentTime + 5 < audioRef.current.duration
     ) {
       audioRef.current.currentTime += 5;
     }
   };
-// Move backward by five seconds
+
   const rewind = () => {
     if (audioRef.current && audioRef.current.currentTime - 5 > 0) {
       audioRef.current.currentTime -= 5;
     } else if (audioRef.current) {
       audioRef.current.currentTime = 0;
+    }
+  };
+
+  const handleShuffle = () => {
+    if (shuffleAudioList) {
+      shuffleAudioList();
+      setIsShuffled((prev) => !prev);
+    }
+  };
+
+  // Click on progress bar to seek
+  const handleProgressClick = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    const progressBar = e.currentTarget;
+    const clickPosition = e.nativeEvent.offsetX;
+    const progressWidth = progressBar.offsetWidth;
+    const clickRatio = clickPosition / progressWidth;
+    const newTime = clickRatio * duration;
+
+    if (audioRef.current) {
+      audioRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
     }
   };
 
@@ -63,7 +93,6 @@ const PodcastPlayer = () => {
     const audioElement = audioRef.current;
     if (audioElement) {
       audioElement.addEventListener("timeupdate", updateCurrentTime);
-
       return () => {
         audioElement.removeEventListener("timeupdate", updateCurrentTime);
       };
@@ -80,18 +109,39 @@ const PodcastPlayer = () => {
       }
     } else {
       audioElement?.pause();
-      setIsPlaying(true);
+      setIsPlaying(false);
     }
   }, [audio]);
+
   const handleLoadedMetadata = () => {
     if (audioRef.current) {
-      setDuration(audioRef.current.duration);
+      setDuration(audioRef.current.duration); // Set the total duration once metadata is loaded
     }
   };
 
-  const handleAudioEnded = () => {
-    setIsPlaying(false);
-  };
+const handleAudioEnded = () => {
+  
+  setIsPlaying(false);
+  console.log("Audio ended, moving to the next audio");
+
+  if (isShuffled) {
+    const randomIndex = Math.floor(Math.random() * audioList.length);
+    setAudio({ ...audioList[randomIndex] });
+    console.log(`Shuffled to audio: ${audioList[randomIndex].title}`);
+  } else {
+    const currentIndex = audio
+      ? audioList.findIndex((a) => a.audioUrl === audio.audioUrl)
+      : -1;
+
+    if (currentIndex !== -1) {
+      const nextIndex = (currentIndex + 1) % audioList.length;
+      setAudio({ ...audioList[nextIndex] });
+      console.log(`Moved to next audio: ${audioList[nextIndex].title}`);
+    } else {
+      console.error("Current audio not found in the audio list.");
+    }
+  }
+};
 
   return (
     <div
@@ -99,12 +149,13 @@ const PodcastPlayer = () => {
         hidden: !audio?.audioUrl || audio?.audioUrl === "",
       })}
     >
-      {/* change the color for indicator inside the Progress component in ui folder */}
-      <Progress
-        value={(currentTime / duration) * 100}
-        className="w-full"
-        max={duration}
-      />
+      <div onClick={handleProgressClick}>
+        <Progress
+          value={(currentTime / duration) * 100}
+          className="w-full"
+          max={duration}
+        />
+      </div>
       <section className="glassmorphism-black flex h-[112px] w-full items-center justify-between px-4 max-md:justify-center max-md:gap-5 md:px-12">
         <audio
           ref={audioRef}
@@ -160,19 +211,36 @@ const PodcastPlayer = () => {
           </div>
         </div>
         <div className="flex items-center gap-6">
+          <Image
+            src={
+              isShuffled ? "/icons/shuffle-on.svg" : "/icons/shuffle-off.svg"
+            }
+            width={24}
+            height={24}
+            alt="shuffle"
+            onClick={handleShuffle}
+            className="cursor-pointer"
+          />
           <h2 className="text-16 font-normal text-white-2 max-md:hidden">
-            {formatTime(duration)}
+            {formatTime(currentTime)} / {formatTime(duration)}{" "}
+            {/* Show current time and duration */}
           </h2>
-          <div className="flex w-full gap-2">
-            <Image
-              src={isMuted ? "/icons/unmute.svg" : "/icons/mute.svg"}
-              width={24}
-              height={24}
-              alt="mute unmute"
-              onClick={toggleMute}
-              className="cursor-pointer"
-            />
-          </div>
+          <Image
+            src={isMuted ? "/icons/unmute.svg" : "/icons/mute.svg"}
+            width={24}
+            height={24}
+            alt="mute unmute"
+            onClick={toggleMute}
+            className="cursor-pointer"
+          />
+          <Image
+            src={isLooping ? "/icons/loop-on.svg" : "/icons/loop-off.svg"}
+            width={24}
+            height={24}
+            alt="loop"
+            onClick={toggleLoop}
+            className="cursor-pointer"
+          />
         </div>
       </section>
     </div>

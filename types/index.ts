@@ -74,13 +74,19 @@ export interface LatestPodcastCardProps {
   audioUrl: string;
   author: string;
   views: number;
+  isOwner: boolean;
+  imageStorageId: Id<"_storage"> | null;
+  audioStorageId: Id<"_storage"> | null;
   creationTime: number;
   podcastId: Id<"podcasts">;
+  isPlaying: boolean;
+  onTogglePlay: (id: Id<"podcasts">) => void;
 }
 
 export interface PodcastDetailPlayerProps {
   audioUrl: string;
   podcastTitle: string;
+  duration: number;
   author: string;
   isOwner: boolean;
   imageUrl: string;
@@ -102,6 +108,11 @@ export interface AudioProps {
 export interface AudioContextType {
   audio: AudioProps | undefined;
   setAudio: React.Dispatch<React.SetStateAction<AudioProps | undefined>>;
+  audioList: AudioProps[];
+  setAudioList: React.Dispatch<React.SetStateAction<AudioProps[]>>;
+  shuffleAudioList: () => void;
+  playAudio: (index: number) => void;
+
 }
 
 export interface PodcastCardProps {

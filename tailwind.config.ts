@@ -43,7 +43,7 @@ const config = {
         },
       },
       backgroundImage: {
-        'red-gradient': 'linear-gradient(92deg, #ff5956 2.87%, #ee1e38 96.18%)',
+        "red-gradient": "linear-gradient(92deg, #ff5956 2.87%, #ee1e38 96.18%)",
         "nav-focus":
           "linear-gradient(270deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.00) 100%)",
       },
@@ -56,10 +56,49 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        moveAndGradient: {
+          "0%": {
+            transform: "translateX(0)",
+            background: "linear-gradient(92deg, #ff5956 2.87%, #ee1e38 96.18%)",
+            "-webkit-background-clip": "text",
+            color: "transparent",
+          },
+          "50%": {
+            transform: "translateX(10%)",
+            background: "white",
+            "-webkit-background-clip": "text",
+            color: "transparent",
+          },
+          "100%": {
+            transform: "translateX(20%)",
+            background: "linear-gradient(92deg, #ff5956 2.87%, #ee1e38 96.18%)",
+            "-webkit-background-clip": "text",
+            color: "transparent",
+          },
+        },
+        "color-gradient":{
+          "0%": {
+            background: "linear-gradient(92deg, #ff5956 2.87%, #ee1e38 96.18%)",
+            "-webkit-background-clip": "text",
+            color: "transparent",
+          },
+          "50%": {
+            background: "white",
+            "-webkit-background-clip": "text",
+            color: "transparent",
+          },
+          "100%": {
+            background: "linear-gradient(92deg, #ff5956 2.87%, #ee1e38 96.18%)",
+            "-webkit-background-clip": "text",
+            color: "transparent",
+          },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "move-gradient": "moveAndGradient 3s linear infinite",
+        "text-gradient": "color-gradient 3s linear infinite",
       },
     },
   },

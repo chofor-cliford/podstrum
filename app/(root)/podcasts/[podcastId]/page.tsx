@@ -1,7 +1,6 @@
 "use client";
 
 import EmptyState from "@/components/EmptyState";
-import LoaderSpinner from "@/components/LoaderSpinner";
 import PodcastCard from "@/components/PodcastCard";
 import PodcastDetailsPlayer from "@/components/PodcastDetailsPlayer";
 import { api } from "@/convex/_generated/api";
@@ -50,6 +49,7 @@ const PodcastDetails = ({
         imageUrl={podcast.imageUrl ?? ""}
         imageStorageId={podcast?.imageStorageId!}
         audioStorageId={podcast?.audioStorageId!}
+        duration={podcast?.audioDuration ?? ""}
         {...podcast}
       />
 

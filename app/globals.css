@@ -30,6 +30,10 @@ html {
     @apply flex flex-col gap-4 bg-[#101114];
   }
 
+  .animate-motion {
+    @apply animate-move-gradient font-bold text-lg bg-clip-text md:block hidden;
+  }
+
   .right_sidebar {
     @apply sticky right-0 top-0 flex w-[310px] flex-col overflow-y-hidden border-none bg-black-1 px-[30px] pt-8 max-xl:hidden;
   }
